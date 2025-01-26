@@ -127,13 +127,61 @@ app.get("/status", async (req, res) => {
 // 画进度条
 function drawProgressBar(ctx, x, y, width, value) {
   const height = 15;
-  // Background
-  ctx.fillStyle = "#e5e7eb";
-  ctx.fillRect(x, y, width, height);
-  // Progress
-  ctx.fillStyle = value > 80 ? "#ef4444" : value > 60 ? "#f59e0b" : "#22c55e";
-  ctx.fillRect(x, y, width * (value / 100), height);
-  // Percentage text
+  const radius = height / 2; // 圆角半径（高度的一半）
+  const progressWidth = width * (value / 100); // 根据进度计算宽度
+  // 创建渐变
+  const gradient = ctx.createLinearGradient(x, y, x + width, y);
+  gradient.addColorStop(0, "#22c55e"); // 起始颜色：绿色
+  gradient.addColorStop(0.5, "#f59e0b"); // 中间颜色：橙色
+  gradient.addColorStop(1, "#ef4444"); // 结束颜色：红色
+
+  // 背景条
+  ctx.fillStyle = "#e5e7eb"; // 背景颜色
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + width, y, x + width, y + height, radius);
+  ctx.arcTo(x + width, y + height, x, y + height, radius);
+  ctx.arcTo(x, y + height, x, y, radius);
+  ctx.arcTo(x, y, x + width, y, radius);
+  ctx.closePath();
+  ctx.fill();
+
+  // 进度条
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  if (value >= 5) {
+    // 正常绘制圆角条形
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + progressWidth, y, x + progressWidth, y + height, radius);
+    ctx.arcTo(x + progressWidth, y + height, x, y + height, radius);
+    ctx.arcTo(x, y + height, x, y, radius);
+    ctx.arcTo(x, y, x + progressWidth, y, radius);
+  } else {
+    // 绘制左边圆角，右边直边，怎么画进度条还要做数学题啊
+    const cosTheta = (height - progressWidth * 2) / height;
+    ctx.moveTo(x, y + radius);
+    ctx.arc(
+      x + height / 2,
+      y + height / 2,
+      radius,
+      Math.PI,
+      Math.PI + Math.acos(cosTheta),
+      false
+    ); // 左上圆角
+    ctx.lineTo(x + progressWidth, y + height / 2 + progressWidth); // 右边
+    ctx.arc(
+      x + height / 2,
+      y + height / 2,
+      radius,
+      Math.PI - Math.acos(cosTheta),
+      Math.PI,
+      false
+    ); // 左下圆角
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  // 百分比文字
   ctx.fillStyle = "#000000";
   ctx.fillText(Math.round(value) + "%", x + width + 5, y + 12);
 }
