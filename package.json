@@ -1,0 +1,26 @@
+{
+  "name": "PicNezha",
+  "version": "1.0.0",
+  "description": "Convert Nezha probe data into images.",
+  "license": "APL",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start: "node app.js"
+  },
+  "keywords": [],
+  "author": "SkyAerope",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.16",
+    "nodemon": "^3.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "canvas": "^3.1.0",
+    "express": "^4.21.2",
+    "moment": "^2.30.1"
+  }
+}
