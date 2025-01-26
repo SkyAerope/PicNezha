@@ -13,14 +13,19 @@ registerFont(__dirname + "/seguiemj.ttf", { family: "Segoe UI Emoji" });
 app.get("/status", async (req, res) => {
   try {
     const apiUrl = process.env.API_URL?.replace(/\/$/, ''); // 去掉结尾的斜杠
-      const response = await axios.get(
-        `${apiUrl}/api/v1/server/details`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.TOKEN}`,
-          },
-        }
-      );
+    const response = await axios.get(
+      `${apiUrl}/api/v1/server/details`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.TOKEN}`,
+        },
+      }
+    );
+
+    // Check for unauthorized access error
+    if (response.data.code === 403) {
+      throw new Error(response.data.message);
+    }
 
     // Check if response data and result exist
     if (!response.data || !response.data.result) {
