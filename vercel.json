@@ -4,7 +4,6 @@
 		"src": "app.js",
 		"use": "@vercel/node"
 	}],
-	"installCommand": "apt-get update && apt-get install -y libfontconfig1 && npm install",
 	"routes": [{
 		"src": "/(.*)",
 		"dest": "/app.js",
