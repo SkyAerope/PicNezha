@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const { createCanvas, registerFont } = require("canvas");
+const { Canvas, FontLibrary } = require("skia-canvas");
 const moment = require("moment");
 
 const app = express();
@@ -9,6 +10,9 @@ const port = 3000;
 // 注册字体
 registerFont(__dirname + "/wqy-zenhei.ttc", { family: "WQY-ZenHei" });
 registerFont(__dirname + "/NotoColorEmoji.ttf", { family: "Noto Color Emoji" });
+FontLibrary.use("WQY-ZenHei", __dirname + "/wqy-zenhei.ttc");
+FontLibrary.use("Noto Color Emoji", __dirname + "/NotoColorEmoji.ttf");
+FontLibrary.use("Segoe UI Emoji", __dirname + "/seguiemj.ttf");
 
 app.get("/status", async (req, res) => {
   try {
@@ -34,8 +38,11 @@ app.get("/status", async (req, res) => {
       .sort((a, b) => b.display_index - a.display_index);
 
     // Create a canvas
-    const canvas = createCanvas(800, servers.length * 100 + 20);
-    const ctx = canvas.getContext("2d");
+    // const canvas = createCanvas(800, servers.length * 100 + 20);
+    // const ctx = canvas.getContext("2d");
+    let canvas = new Canvas(800, servers.length * 100 + 20),
+      ctx = canvas.getContext("2d"),
+      { width, height } = canvas;
     ctx.textDrawingMode = "glyph"; // https://github.com/Automattic/node-canvas/issues/760#issuecomment-2260271607
 
     // 背景
@@ -51,11 +58,12 @@ app.get("/status", async (req, res) => {
 
       // 服务器名称
       ctx.fillStyle = "#000";
-      ctx.font = 'bold 16px "Noto Color Emoji", "WQY-ZenHei"';
+      // ctx.font = 'bold 16px "Noto Color Emoji", "WQY-ZenHei"';
+      ctx.font = 'bold 16px "Segoe UI Emoji", "WQY-ZenHei"';
       ctx.fillText(server.name, 20, y);
 
       // 系统
-      ctx.font = "14px Arial";
+      ctx.font = '14px "Segoe UI Emoji", "WQY-ZenHei", Arial';
       ctx.fillText(
         `🖥️ ${server.host.Platform} ${server.host.PlatformVersion}`,
         20,
@@ -92,8 +100,12 @@ app.get("/status", async (req, res) => {
     });
 
     // Send image as response
-    res.setHeader("Content-Type", "image/png");
-    canvas.createPNGStream().pipe(res);
+    // res.setHeader("Content-Type", "image/png");
+    // canvas.createPNGStream().pipe(res);
+
+    const buffer = await canvas.toBuffer("image/png"); // 异步方法
+    res.set("Content-Type", "image/png");
+    res.send(buffer);
   } catch (error) {
     console.error("Error:", error);
     // res.status(500).send("Error generating status page: " + error.message);
