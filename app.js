@@ -44,10 +44,6 @@ app.get("/status", async (req, res) => {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, 800, canvas.height);
 
-    // Text settings
-    ctx.font = "14px Arial";
-    ctx.fillStyle = "#000000";
-
     servers.forEach((server, index) => {
       const y = index * 100 + 20;
 
@@ -93,6 +89,14 @@ app.get("/status", async (req, res) => {
       ctx.fillText("总上传:", 620, y + 55);
       ctx.fillText(formatBytes(server.status.NetOutTransfer), 670, y + 55);
     });
+
+    ctx.font = "10px Arial";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.54)";
+    ctx.fillText(
+      "Powered By PicNezha (https://github.com/SkyAerope/PicNezha)",
+      800 - 350,
+      servers.length * 100 + 10
+    );
 
     const buffer = await canvas.toBuffer("image/png");
     res.set("Content-Type", "image/png");
