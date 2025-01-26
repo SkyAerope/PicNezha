@@ -4,14 +4,23 @@ const axios = require("axios");
 const { createCanvas, registerFont } = require("canvas");
 const { Canvas, FontLibrary } = require("skia-canvas");
 const moment = require("moment");
+const path = require("path");
 
 const app = express();
 const port = 3000;
 
+// 针对netlify的特殊设置
+let currentDir = __dirname;
+console.log(currentDir);
+if (currentDir.includes(".netlify/functions-serve/app")) {
+  var netlify = true;
+  currentDir = currentDir.replace(".netlify/functions-serve/app", "");
+}
 // 注册字体
-FontLibrary.use("WQY-ZenHei", __dirname + "/wqy-zenhei.ttc");
+// FontLibrary.use("WQY-ZenHei", __dirname + "/wqy-zenhei.ttc");
+FontLibrary.use("WQY-ZenHei", currentDir + "/wqy-zenhei.ttc");
 // FontLibrary.use("Noto Color Emoji", __dirname + "/NotoColorEmoji.ttf");
-FontLibrary.use("Segoe UI Emoji", __dirname + "/seguiemj.ttf");
+FontLibrary.use("Segoe UI Emoji", currentDir + "/seguiemj.ttf");
 
 app.get("/status", async (req, res) => {
   try {
@@ -277,8 +286,10 @@ function formatBytes(bytes) {
   return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + " " + sizes[i];
 }
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/status`);
-});
-
-module.exports.handler = serverless(app);
+if (!netlify) {
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/status`);
+  });
+} else {
+  module.exports.handler = serverless(app);
+}
