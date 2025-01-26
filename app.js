@@ -7,11 +7,8 @@ const app = express();
 const port = 3000;
 
 // 注册字体
-registerFont("wqy-zenhei.ttc", {
-  family: "WQY-ZenHei",
-});
-
-registerFont("seguiemj.ttf", { family: "Segoe UI Emoji" });
+registerFont(__dirname + "/wqy-zenhei.ttc", { family: "WQY-ZenHei" });
+registerFont(__dirname + "/seguiemj.ttf", { family: "Segoe UI Emoji" });
 
 app.get("/status", async (req, res) => {
   try {
