@@ -1,4 +1,5 @@
 const express = require("express");
+const serverless = require("serverless-http");
 const axios = require("axios");
 const { createCanvas, registerFont } = require("canvas");
 const { Canvas, FontLibrary } = require("skia-canvas");
@@ -40,16 +41,16 @@ app.get("/status", async (req, res) => {
       ctx = canvas.getContext("2d");
     ctx.textDrawingMode = "glyph"; // https://github.com/Automattic/node-canvas/issues/760#issuecomment-2260271607
 
-    // 背景
+    // 背景纯色（注释掉会变透明）
     // ctx.fillStyle = "#ffffff";
     // ctx.fillRect(0, 0, 800, canvas.height);
 
-    // 卡片参数
-    const cardX = 10; // 卡片的 x 坐标
-    const cardY = 10; // 卡片的 y 坐标
-    const cardWidth = canvas.width - 20; // 卡片宽度
-    const cardHeight = canvas.height - 20; // 卡片高度
-    const borderRadius = 16; // 卡片的圆角半径
+    // 背景卡片
+    const cardX = 10;
+    const cardY = 10;
+    const cardWidth = canvas.width - 20;
+    const cardHeight = canvas.height - 20;
+    const borderRadius = 16;
 
     // 阴影设置
     ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; // 阴影颜色
@@ -62,8 +63,8 @@ app.get("/status", async (req, res) => {
       cardX,
       cardY + cardHeight
     );
-    gradient.addColorStop(0, "#f5f9fa"); // 渐变起始颜色
-    gradient.addColorStop(1, "#ecf9f6"); // 渐变结束颜色
+    gradient.addColorStop(0, "#f5f9fa");
+    gradient.addColorStop(1, "#ecf9f6");
 
     // 绘制圆角卡片
     ctx.beginPath();
@@ -279,3 +280,5 @@ function formatBytes(bytes) {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/status`);
 });
+
+export const handler = serverless(app);
