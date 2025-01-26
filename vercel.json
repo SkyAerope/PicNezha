@@ -2,7 +2,10 @@
 	"version": 2,
 	"builds": [{
 		"src": "app.js",
-		"use": "@vercel/node"
+		"use": "@vercel/node",
+		"config": {
+			"installCommand": "apt-get update && apt-get install -y libfontconfig1 && npm install"
+		}
 	}],
 	"routes": [{
 		"src": "/(.*)",
