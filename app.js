@@ -35,41 +35,98 @@ app.get("/status", async (req, res) => {
       .filter((server) => server.status.Uptime > 0 && !server.hide_for_guest)
       .sort((a, b) => b.display_index - a.display_index);
 
-    // Create a canvas
-    let canvas = new Canvas(800, servers.length * 100 + 20),
+    // 创建画布
+    let canvas = new Canvas(800, servers.length * 100 + 40),
       ctx = canvas.getContext("2d");
     ctx.textDrawingMode = "glyph"; // https://github.com/Automattic/node-canvas/issues/760#issuecomment-2260271607
 
     // 背景
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, 800, canvas.height);
+    // ctx.fillStyle = "#ffffff";
+    // ctx.fillRect(0, 0, 800, canvas.height);
+
+    // 卡片参数
+    const cardX = 10; // 卡片的 x 坐标
+    const cardY = 10; // 卡片的 y 坐标
+    const cardWidth = canvas.width - 20; // 卡片宽度
+    const cardHeight = canvas.height - 20; // 卡片高度
+    const borderRadius = 16; // 卡片的圆角半径
+
+    // 阴影设置
+    ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; // 阴影颜色
+    ctx.shadowBlur = 10; // 模糊程度
+
+    // 创建渐变颜色
+    const gradient = ctx.createLinearGradient(
+      cardX,
+      cardY,
+      cardX,
+      cardY + cardHeight
+    );
+    gradient.addColorStop(0, "#f5f9fa"); // 渐变起始颜色
+    gradient.addColorStop(1, "#ecf9f6"); // 渐变结束颜色
+
+    // 绘制圆角卡片
+    ctx.beginPath();
+    ctx.moveTo(cardX + borderRadius, cardY);
+    ctx.lineTo(cardX + cardWidth - borderRadius, cardY);
+    ctx.quadraticCurveTo(
+      cardX + cardWidth,
+      cardY,
+      cardX + cardWidth,
+      cardY + borderRadius
+    );
+    ctx.lineTo(cardX + cardWidth, cardY + cardHeight - borderRadius);
+    ctx.quadraticCurveTo(
+      cardX + cardWidth,
+      cardY + cardHeight,
+      cardX + cardWidth - borderRadius,
+      cardY + cardHeight
+    );
+    ctx.lineTo(cardX + borderRadius, cardY + cardHeight);
+    ctx.quadraticCurveTo(
+      cardX,
+      cardY + cardHeight,
+      cardX,
+      cardY + cardHeight - borderRadius
+    );
+    ctx.lineTo(cardX, cardY + borderRadius);
+    ctx.quadraticCurveTo(cardX, cardY, cardX + borderRadius, cardY);
+    ctx.closePath();
+
+    // 设置渐变填充
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // 重置阴影（防止后续影响）
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
 
     servers.forEach((server, index) => {
-      const y = index * 100 + 20;
+      const y = index * 100 + 40;
 
       // 服务器名称
       ctx.fillStyle = "#000";
       // ctx.font = 'bold 16px "Noto Color Emoji", "WQY-ZenHei"';
       ctx.font = 'bold 16px "Segoe UI Emoji", "WQY-ZenHei"';
-      ctx.fillText(server.name, 20, y);
+      ctx.fillText(server.name, 30, y);
 
       // 系统
       ctx.font = '14px "Segoe UI Emoji", "WQY-ZenHei", Arial';
       ctx.fillText(
         `🖥️ ${server.host.Platform} ${server.host.PlatformVersion}`,
-        20,
+        30,
         y + 25
       );
 
       // 国家
-      ctx.fillText(`📍 ${server.host.CountryCode.toUpperCase()}`, 20, y + 45);
+      ctx.fillText(`📍 ${server.host.CountryCode.toUpperCase()}`, 30, y + 45);
 
       // Uptime
       ctx.fillText(
         `⏱️ Uptime: ${moment
           .duration(server.status.Uptime, "seconds")
           .humanize()}`,
-        20,
+        30,
         y + 65
       );
 
@@ -94,8 +151,8 @@ app.get("/status", async (req, res) => {
     ctx.fillStyle = "rgba(0, 0, 0, 0.54)";
     ctx.fillText(
       "Powered By PicNezha (https://github.com/SkyAerope/PicNezha)",
-      800 - 350,
-      servers.length * 100 + 10
+      canvas.width - 350,
+      servers.length * 100 + 20
     );
 
     const buffer = await canvas.toBuffer("image/png");
