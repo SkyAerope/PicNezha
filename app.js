@@ -281,4 +281,4 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/status`);
 });
 
-export const handler = serverless(app);
+module.exports.handler = serverless(app);
