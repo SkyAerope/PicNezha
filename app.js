@@ -8,19 +8,16 @@ const port = 3000;
 
 // 注册字体
 registerFont(__dirname + "/wqy-zenhei.ttc", { family: "WQY-ZenHei" });
-registerFont(__dirname + "/seguiemj.ttf", { family: "Segoe UI Emoji" });
+registerFont(__dirname + "/NotoColorEmoji.ttf", { family: "Noto Color Emoji" });
 
 app.get("/status", async (req, res) => {
   try {
-    const apiUrl = process.env.API_URL?.replace(/\/$/, ''); // 去掉结尾的斜杠
-    const response = await axios.get(
-      `${apiUrl}/api/v1/server/details`,
-      {
-        headers: {
-          Authorization: process.env.TOKEN,
-        },
-      }
-    );
+    const apiUrl = process.env.API_URL?.replace(/\/$/, ""); // 去掉结尾的斜杠
+    const response = await axios.get(`${apiUrl}/api/v1/server/details`, {
+      headers: {
+        Authorization: process.env.TOKEN,
+      },
+    });
 
     // Check for unauthorized access error
     if (response.data.code === 403) {
@@ -54,7 +51,7 @@ app.get("/status", async (req, res) => {
 
       // 服务器名称
       ctx.fillStyle = "#000";
-      ctx.font = 'bold 16px "Segoe UI Emoji", "WQY-ZenHei"';
+      ctx.font = 'bold 16px "Noto Color Emoji", "WQY-ZenHei"';
       ctx.fillText(server.name, 20, y);
 
       // 系统
