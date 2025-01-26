@@ -134,10 +134,9 @@ function drawProgressBar(ctx, x, y, width, value) {
   const radius = height / 2; // 圆角半径（高度的一半）
   const progressWidth = width * (value / 100); // 根据进度计算宽度
   // 创建渐变
-  const gradient = ctx.createLinearGradient(x, y, x + width, y);
-  gradient.addColorStop(0, "#22c55e"); // 起始颜色：绿色
-  gradient.addColorStop(0.5, "#f59e0b"); // 中间颜色：橙色
-  gradient.addColorStop(1, "#ef4444"); // 结束颜色：红色
+  const gradient = ctx.createLinearGradient(x, y, x + width, y); // 水平方向的渐变
+  gradient.addColorStop(0, "#90c4fc"); // 起始颜色：浅蓝色
+  gradient.addColorStop(1, "#ddc4fc"); // 结束颜色：淡紫色
 
   // 背景条
   ctx.fillStyle = "#e5e7eb"; // 背景颜色
