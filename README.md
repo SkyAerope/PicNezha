@@ -17,7 +17,19 @@
 3. 部署后，访问`https://网址/status`即可看到图片
 
 ## 常问问题
-### 1. 为什么安装了canvas库但是不使用？
+### 1. 如何更换字体？
+   参考代码开头注册字体，并修改代码中的`ctx.font`
+   
+   中英文和emoji均可更换
+   
+   更换时请注意字体文件大小限制：单文件超过25 MB在GitHub需使用LFS，所有文件[超过250 MB无法在vercel使用](https://vercel.com/docs/functions/runtimes#size-limits)。
+   
+   ![image](https://github.com/user-attachments/assets/a8231061-9aaf-45b9-abd3-974d5609a9a8)
+   > 像这个字体就有点大了
+
+### 2. 为什么仓库中会出现一个未被使用的字体`NotoColorEmoji.ttf`？
+   方便你换emoji字体的，删掉也不影响
+### 3. 为什么安装了canvas库但是没有在脚本中使用？
   若不安装，vercel运行脚本时会出现以下报错，安装之后可以解决
   ```
   Error: libfontconfig.so.1: cannot open shared object file: No such file or directory
