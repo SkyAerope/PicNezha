@@ -1,5 +1,6 @@
 const express = require("express");
 const axios = require("axios");
+const { createCanvas, registerFont } = require("canvas");
 const { Canvas, FontLibrary } = require("skia-canvas");
 const moment = require("moment");
 
@@ -7,8 +8,10 @@ const app = express();
 const port = 3000;
 
 // 注册字体
+registerFont(__dirname + "/wqy-zenhei.ttc", { family: "WQY-ZenHei" });
+registerFont(__dirname + "/NotoColorEmoji.ttf", { family: "Noto Color Emoji" });
 FontLibrary.use("WQY-ZenHei", __dirname + "/wqy-zenhei.ttc");
-// FontLibrary.use("Noto Color Emoji", __dirname + "/NotoColorEmoji.ttf");
+FontLibrary.use("Noto Color Emoji", __dirname + "/NotoColorEmoji.ttf");
 FontLibrary.use("Segoe UI Emoji", __dirname + "/seguiemj.ttf");
 
 app.get("/status", async (req, res) => {
@@ -35,8 +38,11 @@ app.get("/status", async (req, res) => {
       .sort((a, b) => b.display_index - a.display_index);
 
     // Create a canvas
+    // const canvas = createCanvas(800, servers.length * 100 + 20);
+    // const ctx = canvas.getContext("2d");
     let canvas = new Canvas(800, servers.length * 100 + 20),
-      ctx = canvas.getContext("2d");
+      ctx = canvas.getContext("2d"),
+      { width, height } = canvas;
     ctx.textDrawingMode = "glyph"; // https://github.com/Automattic/node-canvas/issues/760#issuecomment-2260271607
 
     // 背景
@@ -93,33 +99,36 @@ app.get("/status", async (req, res) => {
       ctx.fillText(formatBytes(server.status.NetOutTransfer), 670, y + 55);
     });
 
-    const buffer = await canvas.toBuffer("image/png");
+    // Send image as response
+    // res.setHeader("Content-Type", "image/png");
+    // canvas.createPNGStream().pipe(res);
+
+    const buffer = await canvas.toBuffer("image/png"); // 异步方法
     res.set("Content-Type", "image/png");
     res.send(buffer);
   } catch (error) {
     console.error("Error:", error);
     // res.status(500).send("Error generating status page: " + error.message);
-    let canvas = new Canvas(800, 200),
-      ctx = canvas.getContext("2d");
+    const canvas = createCanvas(800, 200);
+    const ctx = canvas.getContext("2d");
 
     ctx.fillStyle = "#ffebee"; // 背景颜色：浅红色
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "#b71c1c"; // 字体颜色：深红色
-    ctx.font = 'bold 20px "Segoe UI Emoji", "WQY-ZenHei", Arial';
-    ctx.fillText("生成图片出错", 50, 60);
+    ctx.font = "bold 20px Arial";
+    ctx.fillText("Error Generating Status Page", 50, 60);
 
     ctx.fillStyle = "#000000"; // 错误详情字体颜色
-    ctx.font = '16px "Segoe UI Emoji", "WQY-ZenHei", Arial';
+    ctx.font = "16px Arial";
 
     const lines = wrapText(ctx, error.message, 700);
     lines.forEach((line, index) => {
       ctx.fillText(line, 50, 100 + index * 20);
     });
 
-    const buffer = await canvas.toBuffer("image/png");
-    res.set("Content-Type", "image/png");
-    res.send(buffer);
+    res.setHeader("Content-Type", "image/png");
+    canvas.createPNGStream().pipe(res);
   }
 });
 
