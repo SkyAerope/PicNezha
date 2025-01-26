@@ -17,7 +17,7 @@ app.get("/status", async (req, res) => {
       `${apiUrl}/api/v1/server/details`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.TOKEN}`,
+          Authorization: process.env.TOKEN,
         },
       }
     );
