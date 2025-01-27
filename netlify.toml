@@ -2,6 +2,7 @@
   external_node_modules = ["express"]
   node_bundler = "esbuild"
   directory = "./"
+  included_files = ["**"]
 [[redirects]]
   force = true
   from = "/*"
