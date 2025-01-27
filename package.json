@@ -2,13 +2,13 @@
   "name": "pic-nezha",
   "version": "1.0.0",
   "description": "Convert Nezha probe data into images.",
-  "license": "APL",
+  "license": "Apache-2.0 license",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js"
   },
-  "keywords": [],
+  "keywords": ["nezha", "express", "canvas"],
   "author": "SkyAerope",
   "devDependencies": {
     "@types/express": "^4.17.21",

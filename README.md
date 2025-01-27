@@ -66,3 +66,13 @@ Node.js process exited with exit status: 1. The logs above can help with debuggi
 本来在开发环境好好的，在 vercel 上面就长这样
 ![image](https://github.com/user-attachments/assets/9e73da21-096b-41a0-97c1-45336f6077a8)
 顺便可以修复使用某些字体时，emoji 变黑白的问题
+
+## 协议和使用限制
+
+本项目基于[Apache-2.0 license](LICENSE)开源，使用时请遵守该协议。
+
+可以对生成的图片右下角的版权信息样式做适当调整，但请不要删除它或让它很难阅读
+
+> 举例：如果你制作了暗黑模式的卡片，你需要把它改成浅色文本
+
+同时，宣传本项目前，请先评估对方遵守协议的可能性。如果可能性较低，建议不要宣传。
