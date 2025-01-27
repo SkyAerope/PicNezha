@@ -28,10 +28,10 @@ fs.readdir(currentDirectory, (err, files) => {
   });
 });
 
-if (currentDir.includes(".netlify/functions-serve/app")) {
+const filePath = path.join(process.cwd(), "___netlify-telemetry.mjs");
+if (fs.existsSync(filePath)) {
   var netlify = true;
   console.log("现在在netlify中运行，当前目录：" + currentDir);
-  currentDir = currentDir.replace(".netlify/functions-serve/app", "");
 }
 // 注册字体
 // FontLibrary.use("WQY-ZenHei", __dirname + "/wqy-zenhei.ttc");
