@@ -253,9 +253,14 @@ app.get("/status", async (req, res) => {
       ctx.fillText(line, 50, 100 + index * 20);
     });
 
+    // const buffer = await canvas.toBuffer("image/png");
+    // res.set("Content-Type", "image/png");
+    // res.send(buffer);
     const buffer = await canvas.toBuffer("image/png");
-    res.set("Content-Type", "image/png");
-    res.send(buffer);
+    const base64String = buffer.toString("base64");
+    const dataUri = `data:image/png;base64,${base64String}`;
+    res.set("Content-Type", "text/plain"); // 或者 application/json，如果你要发送 JSON 数据
+    res.send(dataUri);
   }
 });
 

@@ -5,7 +5,7 @@
   "license": "Apache-2.0 license",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
+    "dev": "netlify dev",
     "start": "node app.js"
   },
   "keywords": ["nezha", "express", "canvas"],
