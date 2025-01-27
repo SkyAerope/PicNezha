@@ -65,15 +65,23 @@ app.get("/status", async (req, res) => {
     ctx.shadowColor = "rgba(0, 0, 0, 0.2)"; // 阴影颜色
     ctx.shadowBlur = 10; // 模糊程度
 
+    // 30度角渐变
+    const angle = Math.PI / 6;
+    const d = (cardHeight - cardWidth * Math.tan(angle)) / 2;
+    const startY = cardY + d;
+    const endY = cardY + cardHeight - d;
+    console.log(d, startY, endY);
+
     // 创建渐变颜色
     const gradient = ctx.createLinearGradient(
       cardX,
-      cardY,
-      cardX,
-      cardY + cardHeight
+      startY,
+      cardX + cardWidth,
+      endY
     );
     gradient.addColorStop(0, "#f5f9fa");
-    gradient.addColorStop(1, "#ecf9f6");
+    gradient.addColorStop(0.5, "#ecf9f6");
+    gradient.addColorStop(1, "#f5f9fa");
 
     // 绘制圆角卡片
     ctx.beginPath();
@@ -103,16 +111,17 @@ app.get("/status", async (req, res) => {
     ctx.quadraticCurveTo(cardX, cardY, cardX + borderRadius, cardY);
     ctx.closePath();
 
-    // 设置渐变填充
+    // 填充
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // 卡片 Header
-    ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
-    ctx.shadowBlur = 15;
+    // 重置阴影（防止后续影响）
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
     ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 5;
+    ctx.shadowOffsetY = 0;
 
+    // 卡片 Header
     const headerHeight = 50;
     const headerGradient = ctx.createLinearGradient(
       cardX,
@@ -142,18 +151,13 @@ app.get("/status", async (req, res) => {
     ctx.fillStyle = headerGradient;
     ctx.fill();
 
-    // 重置阴影（防止后续影响）
-    ctx.shadowColor = "transparent";
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-
     // 绘制 Header 文本
     const headerText = process.env.TEXT || process.env.API_URL || "探针";
-    ctx.fillStyle = "#000000"; // 黑色字体
-    ctx.font = '20px "Segoe UI Emoji", "WQY-ZenHei", Arial'; // 字体样式
+    ctx.fillStyle = "#000000";
+    ctx.font = '20px "Segoe UI Emoji", "WQY-ZenHei", Arial';
     ctx.textBaseline = "middle"; // 垂直居中
     ctx.fillText(headerText, cardX + 20, cardY + headerHeight / 2);
+    ctx.textBaseline = "alphabetic"; // 重置文本基线为对齐到标准字母基线
 
     servers.forEach((server, index) => {
       const y = index * 100 + 90;
