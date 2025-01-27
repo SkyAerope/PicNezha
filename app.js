@@ -46,7 +46,7 @@ app.get("/status", async (req, res) => {
       .sort((a, b) => b.display_index - a.display_index);
 
     // 创建画布
-    let canvas = new Canvas(800, servers.length * 100 + 40),
+    let canvas = new Canvas(800, servers.length * 100 + 90),
       ctx = canvas.getContext("2d");
     ctx.textDrawingMode = "glyph"; // https://github.com/Automattic/node-canvas/issues/760#issuecomment-2260271607
 
@@ -107,12 +107,56 @@ app.get("/status", async (req, res) => {
     ctx.fillStyle = gradient;
     ctx.fill();
 
+    // 卡片 Header
+    ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+    ctx.shadowBlur = 15;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 5;
+
+    const headerHeight = 50;
+    const headerGradient = ctx.createLinearGradient(
+      cardX,
+      cardY,
+      cardX + cardWidth,
+      cardY
+    );
+    headerGradient.addColorStop(0, "#88FDCD");
+    headerGradient.addColorStop(1, "#95C4F5");
+
+    // 绘制 Header 区域
+    ctx.beginPath();
+    ctx.moveTo(cardX + borderRadius, cardY); // 左上角圆角开始
+    ctx.lineTo(cardX + cardWidth - borderRadius, cardY); // 顶边直线
+    ctx.quadraticCurveTo(
+      cardX + cardWidth,
+      cardY,
+      cardX + cardWidth,
+      cardY + borderRadius
+    ); // 右上角圆角
+    ctx.lineTo(cardX + cardWidth, cardY + headerHeight); // 右侧直线
+    ctx.lineTo(cardX, cardY + headerHeight); // 底边直线
+    ctx.lineTo(cardX, cardY + borderRadius); // 左侧直线
+    ctx.quadraticCurveTo(cardX, cardY, cardX + borderRadius, cardY); // 左上角圆角
+    ctx.closePath();
+
+    ctx.fillStyle = headerGradient;
+    ctx.fill();
+
     // 重置阴影（防止后续影响）
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+    // 绘制 Header 文本
+    const headerText = process.env.TEXT || process.env.API_URL || "探针";
+    ctx.fillStyle = "#000000"; // 黑色字体
+    ctx.font = '20px "Segoe UI Emoji", "WQY-ZenHei", Arial'; // 字体样式
+    ctx.textBaseline = "middle"; // 垂直居中
+    ctx.fillText(headerText, cardX + 20, cardY + headerHeight / 2);
 
     servers.forEach((server, index) => {
-      const y = index * 100 + 40;
+      const y = index * 100 + 90;
 
       // 服务器名称
       ctx.fillStyle = "#000";
@@ -162,7 +206,7 @@ app.get("/status", async (req, res) => {
     ctx.fillText(
       "Powered By PicNezha (https://github.com/SkyAerope/PicNezha)",
       canvas.width - 350,
-      servers.length * 100 + 20
+      canvas.height - 20
     );
 
     const buffer = await canvas.toBuffer("image/png");
