@@ -11,9 +11,9 @@ const port = 3000;
 
 // 针对netlify的特殊设置
 let currentDir = __dirname;
-console.log(currentDir);
 if (currentDir.includes(".netlify/functions-serve/app")) {
   var netlify = true;
+  console.log("现在在netlify中运行，当前目录：" + currentDir);
   currentDir = currentDir.replace(".netlify/functions-serve/app", "");
 }
 // 注册字体
@@ -70,7 +70,6 @@ app.get("/status", async (req, res) => {
     const d = (cardHeight - cardWidth * Math.tan(angle)) / 2;
     const startY = cardY + d;
     const endY = cardY + cardHeight - d;
-    console.log(d, startY, endY);
 
     // 创建渐变颜色
     const gradient = ctx.createLinearGradient(

@@ -7,7 +7,9 @@
 
 ## 示例
 
-![image](https://github.com/user-attachments/assets/13813b2d-fc31-4f2a-b320-07f4a74a26f1)
+![image](https://github.com/user-attachments/assets/4c742fca-8b9f-48ef-b88d-9e1d557e770e)
+
+> 示例图片是静态的
 
 ## 如何使用
 
@@ -63,3 +65,4 @@ Node.js process exited with exit status: 1. The logs above can help with debuggi
 
 本来在开发环境好好的，在 vercel 上面就长这样
 ![image](https://github.com/user-attachments/assets/9e73da21-096b-41a0-97c1-45336f6077a8)
+顺便可以修复使用某些字体时，emoji 变黑白的问题
