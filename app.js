@@ -11,6 +11,23 @@ const port = 3000;
 
 // 针对netlify的特殊设置
 let currentDir = __dirname;
+const fs = require("fs");
+
+// 获取当前工作目录
+const currentDirectory = process.cwd();
+console.log("当前目录：" + currentDirectory);
+// 读取当前目录下的文件
+fs.readdir(currentDirectory, (err, files) => {
+  if (err) {
+    return console.error("无法读取目录：", err);
+  }
+  // 输出文件列表
+  console.log("当前目录下的文件：");
+  files.forEach((file) => {
+    console.log(file);
+  });
+});
+
 if (currentDir.includes(".netlify/functions-serve/app")) {
   var netlify = true;
   console.log("现在在netlify中运行，当前目录：" + currentDir);
