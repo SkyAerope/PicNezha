@@ -315,13 +315,19 @@ function wrapText(ctx, text, maxWidth) {
     const testWidth = metrics.width;
 
     if (testWidth > maxWidth) {
-      lines.push(line.trim());
-      line = word + " ";
+      if (line !== "") {
+        lines.push(line.trim());
+        line = word + " ";
+      } else {
+        // 单词本身已超出宽度，直接换行避免空行
+        lines.push(word);
+        line = "";
+      }
     } else {
       line = testLine;
     }
   }
-  lines.push(line.trim());
+  if (line.trim() !== "") lines.push(line.trim());
   return lines;
 }
 
